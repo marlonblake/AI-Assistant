@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Chatbot</title>
@@ -69,44 +70,46 @@
         }
     </style>
 </head>
+
 <body>
 
-<div id="chat"></div>
+    <div id="chat"></div>
 
-<div id="inputBox">
-    <input id="textInput" placeholder="Type something…" />
-    <button onclick="sendMessage()">Send</button>
-</div>
+    <div id="inputBox">
+        <input id="textInput" placeholder="Type something…" />
+        <button onclick="sendMessage()">Send</button>
+    </div>
 
-<script>
-    async function sendMessage() {
-        let text = document.getElementById("textInput").value;
-        if (!text) return;
+    <script>
+        async function sendMessage() {
+            let text = document.getElementById("textInput").value;
+            if (!text) return;
 
-        // Show user message
-        addMessage(text, "me");
-        document.getElementById("textInput").value = "";
+            // Show user message
+            addMessage(text, "me");
+            document.getElementById("textInput").value = "";
 
-        // Call your backend
-        let response = await fetch("http://localhost:5000/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: text })
-        });
+            // Call your backend
+            let response = await fetch("http://127.0.0.1:5000/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: text })
+            });
 
-        let data = await response.json();
-        addMessage(data.reply, "bot");
-    }
+            let data = await response.json();
+            addMessage(data.reply, "bot");
+        }
 
-    function addMessage(text, type) {
-        let chat = document.getElementById("chat");
-        let msg = document.createElement("div");
-        msg.className = "msg " + type;
-        msg.innerText = text;
-        chat.appendChild(msg);
-        chat.scrollTop = chat.scrollHeight;
-    }
-</script>
+        function addMessage(text, type) {
+            let chat = document.getElementById("chat");
+            let msg = document.createElement("div");
+            msg.className = "msg " + type;
+            msg.innerText = text;
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+        }
+    </script>
 
 </body>
+
 </html>
