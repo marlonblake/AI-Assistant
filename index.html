@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f0f0f;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .msg {
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            max-width: 75%;
+        }
+
+        .me {
+            background: #1f6feb;
+            margin-left: auto;
+        }
+
+        .bot {
+            background: #222;
+            margin-right: auto;
+        }
+
+        #inputBox {
+            display: flex;
+            padding: 10px;
+            background: #111;
+        }
+
+        #textInput {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            border-radius: 6px;
+            background: #222;
+            color: white;
+        }
+
+        button {
+            padding: 10px 16px;
+            margin-left: 10px;
+            border: none;
+            background: #1f6feb;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3981ff;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chat"></div>
+
+<div id="inputBox">
+    <input id="textInput" placeholder="Type something…" />
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    async function sendMessage() {
+        let text = document.getElementById("textInput").value;
+        if (!text) return;
+
+        // Show user message
+        addMessage(text, "me");
+        document.getElementById("textInput").value = "";
+
+        // Call your backend
+        let response = await fetch("http://localhost:5000/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: text })
+        });
+
+        let data = await response.json();
+        addMessage(data.reply, "bot");
+    }
+
+    function addMessage(text, type) {
+        let chat = document.getElementById("chat");
+        let msg = document.createElement("div");
+        msg.className = "msg " + type;
+        msg.innerText = text;
+        chat.appendChild(msg);
+        chat.scrollTop = chat.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
