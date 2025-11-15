@@ -1,12 +1,16 @@
 from flask import Flask, request, jsonify
 from llama_cpp import Llama
 from flask_cors import CORS
+import os
+from dotenv import load_dotenv
+
+load_dotenv() 
 
 app = Flask(__name__)
 CORS(app)
 
 llm = Llama(
-    model_path="D:\myproject\models\llama-2-7b-chat.Q4_K_M.gguf",
+    model_path=os.getenv("MODEL_PATH"),
     n_ctx=2048
 )
 
